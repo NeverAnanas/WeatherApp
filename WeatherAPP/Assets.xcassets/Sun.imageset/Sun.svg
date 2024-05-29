@@ -7,9 +7,6 @@
 <g filter="url(#filter1_bi_31_7155)">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M25.8989 105.996C25.7695 105.999 25.6398 106 25.5097 106C15.8394 106 8 98.1166 8 88.3916C8 81.7918 11.6104 76.0401 16.9533 73.0249C16.9507 72.8648 16.9494 72.7045 16.9494 72.5438C16.9494 56.4435 29.9279 43.3916 45.9377 43.3916C59.7475 43.3916 71.3019 53.1029 74.2166 66.1051C84.7835 66.5513 93.2141 75.3075 93.2141 86.0438C93.2141 97.0655 84.3294 106 73.3697 106C73.1091 106 72.8497 105.995 72.5915 105.985V106H25.8989V105.996Z" fill="url(#paint1_radial_31_7155)" fill-opacity="0.8"/>
 </g>
-<g style="mix-blend-mode:soft-light" filter="url(#filter2_di_31_7155)">
-<ellipse cx="25.5097" cy="88.3914" rx="17.5097" ry="17.6087" fill="#848484"/>
-</g>
 <defs>
 <filter id="filter0_ii_31_7155" x="36.6848" y="22.9565" width="60.8093" height="61.6304" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
@@ -37,21 +34,6 @@
 <feGaussianBlur stdDeviation="4"/>
 <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
 <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.8 0"/>
-<feBlend mode="normal" in2="shape" result="effect2_innerShadow_31_7155"/>
-</filter>
-<filter id="filter2_di_31_7155" x="4.864" y="64.5107" width="46.7795" height="46.1933" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dx="-0.784" dy="-3.92"/>
-<feGaussianBlur stdDeviation="1.176"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.22 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_31_7155"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_31_7155" result="shape"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dx="8.624" dy="4.704"/>
-<feGaussianBlur stdDeviation="4.312"/>
-<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
-<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.74 0"/>
 <feBlend mode="normal" in2="shape" result="effect2_innerShadow_31_7155"/>
 </filter>
 <radialGradient id="paint0_radial_31_7155" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(62.5 45.5001) rotate(54.6375) scale(38.0132 37.7995)">
