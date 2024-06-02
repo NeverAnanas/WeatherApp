@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UINavigationBar.appearance().titleTextAttributes = attrs
         
         let window = UIWindow(windowScene: windowScene)
-        let navigationController = UINavigationController(rootViewController: ViewController())
+        let navigationController = UINavigationController(rootViewController: MainScreenViewController())
         window.rootViewController = navigationController
         self.window = window
         window.makeKeyAndVisible()

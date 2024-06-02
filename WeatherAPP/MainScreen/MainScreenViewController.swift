@@ -8,7 +8,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+struct WeatherItem {
+    let time: String
+    let temperature: String
+}
+
+class MainScreenViewController: UIViewController {
     
     let myScrollViewTemperature = UIScrollView()
     let topContainer = UIImageView()
@@ -22,12 +27,37 @@ class ViewController: UIViewController {
     let lastTemperatureLabelBlack = UILabel()
     let lastTimeTemperature = UILabel()
     let rectangle = UIImageView()
-    let collectionView = UICollectionView(frame: .zero)
+    let collectionLayout = UICollectionViewFlowLayout()
+    
+    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
+
+    let weatherItems = [
+        WeatherItem(time: "12:00", temperature: "25°"),
+        WeatherItem(time: "15:00", temperature: "25°"),
+        WeatherItem(time: "18:00", temperature: "25°"),
+        WeatherItem(time: "21:00", temperature: "21°"),
+        WeatherItem(time: "01:00", temperature: "20°")
+    ]
     
     let item = UIBarButtonItem(systemItem: .close)
 
+    // MARK: - ViewDidLoad
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        collectionLayout.itemSize = CGSize(width: 73, height: 114)
+//        collectionLayout.layer.cornerRadius = 8
+        collectionLayout.scrollDirection = .horizontal
+        collectionLayout.minimumInteritemSpacing = 20
+        collectionLayout.minimumLineSpacing = 20
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
+        
         // navigation Item title (Нижний Новгород)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(buttonTappedAction))
         
@@ -226,13 +256,15 @@ class ViewController: UIViewController {
             lastTimeTemperature.leftAnchor.constraint(equalTo: buttomContainer.leftAnchor, constant: 27)
         ])
     
-        buttomContainer.addSubview(rectangle)
-        rectangle.translatesAutoresizingMaskIntoConstraints = false
-        rectangle.image = UIImage(named: "rectangle_icon")
+        buttomContainer.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .red
         
         NSLayoutConstraint.activate([
-            rectangle.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
-            rectangle.leftAnchor.constraint(equalTo: buttomContainer.leftAnchor, constant: 27)
+            collectionView.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
+            collectionView.leftAnchor.constraint(equalTo: buttomContainer.leftAnchor, constant: 27),
+            collectionView.topAnchor.constraint(equalTo: lastTimeTemperature.bottomAnchor, constant: 16),
+            collectionView.rightAnchor.constraint(equalTo: buttomContainer.rightAnchor, constant: -27)
         ])
         
     }
@@ -243,6 +275,47 @@ class ViewController: UIViewController {
 //    }
 }
 
+// MARK: - UICollectionViewDataSource
+
+extension MainScreenViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "weatherCell", for: indexPath) as? WeatherItemCell else {
+            return UICollectionViewCell()
+        }
+        
+        print(indexPath.row)
+        let weatherItem = weatherItems[indexPath.row]
+        
+        cell.configure(
+            .init(time: weatherItem.time,
+                  temperature: weatherItem.temperature)
+        )
+        
+        return cell
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return weatherItems.count
+    }
+    
+    
+}
+
+// MARK: - UICollectionViewDelegate
+
+extension MainScreenViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //
+    }
+    
+}
+
 #Preview(traits: .portrait) {
-    ViewController()
+    MainScreenViewController()
 }
