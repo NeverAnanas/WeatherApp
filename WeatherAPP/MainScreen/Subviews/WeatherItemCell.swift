@@ -14,7 +14,7 @@ class WeatherItemCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        backgroundColor = .gray
+        backgroundColor = UIColor(named: "light_gray")
         
         addSubview(timeLabel)
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
