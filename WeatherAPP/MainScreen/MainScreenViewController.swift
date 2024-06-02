@@ -29,13 +29,24 @@ class MainScreenViewController: UIViewController  {
     let rectangle = UIImageView()
     let collectionLayout = UICollectionViewFlowLayout()
     
-    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
+    lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.alwaysBounceHorizontal = true
+        collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .red
+        return collectionView
+    }()
 
     let weatherItems = [
         WeatherItem(time: "12:00", temperature: "25°"),
         WeatherItem(time: "15:00", temperature: "25°"),
         WeatherItem(time: "18:00", temperature: "25°"),
         WeatherItem(time: "21:00", temperature: "21°"),
+        WeatherItem(time: "01:00", temperature: "20°"),
         WeatherItem(time: "01:00", temperature: "20°")
     ]
     
@@ -47,17 +58,13 @@ class MainScreenViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        topContainer.isUserInteractionEnabled = true
+        buttomContainer.isUserInteractionEnabled = true
+        
         collectionLayout.itemSize = CGSize(width: 73, height: 114)
-//        collectionLayout.layer.cornerRadius = 8
         collectionLayout.scrollDirection = .horizontal
         collectionLayout.minimumInteritemSpacing = 20
         collectionLayout.minimumLineSpacing = 20
-        
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        collectionView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: .zero)
-        
-        collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
         
         // navigation Item title (Нижний Новгород)
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(buttonTappedAction))
@@ -277,11 +284,10 @@ class MainScreenViewController: UIViewController  {
         
         NSLayoutConstraint.activate([
             collectionView.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
-            collectionView.leftAnchor.constraint(equalTo: buttomContainer.leftAnchor, constant: 27),
+            collectionView.leadingAnchor.constraint(equalTo: buttomContainer.leadingAnchor, constant: 27),
             collectionView.topAnchor.constraint(equalTo: lastTimeTemperature.bottomAnchor, constant: 16),
-            collectionView.rightAnchor.constraint(equalTo: buttomContainer.rightAnchor, constant: -27)
+            collectionView.trailingAnchor.constraint(equalTo: buttomContainer.trailingAnchor, constant: -27)
         ])
-        
     }
     
 //    func layoutCurrentWeatherViewGrey() {
@@ -293,7 +299,11 @@ class MainScreenViewController: UIViewController  {
 extension MainScreenViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
+        if scrollView === self.scrollView {
+            print("scroll view scrolling: \(scrollView.contentOffset.y)")
+        } else if collectionView === scrollView {
+            print("collection view scrolling: \(scrollView.contentOffset.y)")
+        }
     }
 }
 
