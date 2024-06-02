@@ -24,6 +24,8 @@ class WeatherItemCell: UICollectionViewCell {
             timeLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             timeLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
+        
+        layer.cornerRadius = 16
     }
     
     func configure(_ configuration: Configuration) {
