@@ -16,6 +16,7 @@
 		AD024B7D2B7F430C00785B6E /* WeatherAPPUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD024B7C2B7F430C00785B6E /* WeatherAPPUITests.swift */; };
 		AD024B7F2B7F430C00785B6E /* WeatherAPPUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD024B7E2B7F430C00785B6E /* WeatherAPPUITestsLaunchTests.swift */; };
 		ADC6AF812C08695A00AA864C /* WeatherItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6AF802C08695A00AA864C /* WeatherItemCell.swift */; };
+		ADC6AF842C0C630100AA864C /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6AF832C0C630100AA864C /* SecondViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		AD024B7C2B7F430C00785B6E /* WeatherAPPUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPPUITests.swift; sourceTree = "<group>"; };
 		AD024B7E2B7F430C00785B6E /* WeatherAPPUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPPUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		ADC6AF802C08695A00AA864C /* WeatherItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherItemCell.swift; sourceTree = "<group>"; };
+		ADC6AF832C0C630100AA864C /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		AD024B5A2B7F430B00785B6E /* WeatherAPP */ = {
 			isa = PBXGroup;
 			children = (
+				ADC6AF822C0C62EF00AA864C /* SecondScreen */,
 				ADC6AF7E2C08693900AA864C /* MainScreen */,
 				AD024B5B2B7F430B00785B6E /* AppDelegate.swift */,
 				AD024B5D2B7F430B00785B6E /* SceneDelegate.swift */,
@@ -141,6 +144,14 @@
 				ADC6AF802C08695A00AA864C /* WeatherItemCell.swift */,
 			);
 			path = Subviews;
+			sourceTree = "<group>";
+		};
+		ADC6AF822C0C62EF00AA864C /* SecondScreen */ = {
+			isa = PBXGroup;
+			children = (
+				ADC6AF832C0C630100AA864C /* SecondViewController.swift */,
+			);
+			path = SecondScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -276,6 +287,7 @@
 				AD024B602B7F430B00785B6E /* MainScreenViewController.swift in Sources */,
 				AD024B5C2B7F430B00785B6E /* AppDelegate.swift in Sources */,
 				AD024B5E2B7F430B00785B6E /* SceneDelegate.swift in Sources */,
+				ADC6AF842C0C630100AA864C /* SecondViewController.swift in Sources */,
 				ADC6AF812C08695A00AA864C /* WeatherItemCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

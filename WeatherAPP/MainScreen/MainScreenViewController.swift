@@ -13,9 +13,9 @@ struct WeatherItem {
     let temperature: String
 }
 
-class MainScreenViewController: UIViewController {
-    
-    let myScrollViewTemperature = UIScrollView()
+class MainScreenViewController: UIViewController  {
+
+    let scrollView = UIScrollView()
     let topContainer = UIImageView()
     let currentDayLabel = UILabel()
     let currentWeatherIconView = UIImageView()
@@ -55,6 +55,7 @@ class MainScreenViewController: UIViewController {
         
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: .zero)
         
         collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
         
@@ -103,18 +104,32 @@ class MainScreenViewController: UIViewController {
     
     func layoutCurrentWeatherView() {
         
+        view.addSubview(scrollView)
+        scrollView.delegate = self
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.alwaysBounceVertical = true 
+        scrollView.alwaysBounceHorizontal = false
+        scrollView.showsHorizontalScrollIndicator = false
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+        
         // background image
         
-        view.addSubview(topContainer)
+        scrollView.addSubview(topContainer)
         topContainer.translatesAutoresizingMaskIntoConstraints = false
         
         topContainer.image = UIImage(named: "Group 33510")
         topContainer.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([
-            topContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            topContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            topContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            topContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            topContainer.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
+            topContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             topContainer.heightAnchor.constraint(equalToConstant: 280)
         ])
         
@@ -177,16 +192,16 @@ class MainScreenViewController: UIViewController {
         
         // background image grey
         
-        view.addSubview(buttomContainer)
+        scrollView.addSubview(buttomContainer)
         buttomContainer.translatesAutoresizingMaskIntoConstraints = false
         
         buttomContainer.image = UIImage(named: "backgroundGrey")
         buttomContainer.contentMode = .scaleAspectFit
         
         NSLayoutConstraint.activate([
-            buttomContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            buttomContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             buttomContainer.topAnchor.constraint(equalTo: topContainer.bottomAnchor, constant: 20),
-            buttomContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            buttomContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
             buttomContainer.heightAnchor.constraint(equalToConstant: 206)
         ])
         
@@ -273,6 +288,13 @@ class MainScreenViewController: UIViewController {
 //        
 //      
 //    }
+}
+
+extension MainScreenViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
+    }
 }
 
 // MARK: - UICollectionViewDataSource
