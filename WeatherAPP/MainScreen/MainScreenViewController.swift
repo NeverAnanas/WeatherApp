@@ -11,6 +11,7 @@ import UIKit
 struct WeatherItem {
     let time: String
     let temperature: String
+    let emoji: String
 }
 
 class MainScreenViewController: UIViewController  {
@@ -28,6 +29,7 @@ class MainScreenViewController: UIViewController  {
     let lastTimeTemperature = UILabel()
     let rectangle = UIImageView()
     let collectionLayout = UICollectionViewFlowLayout()
+    let sunnyAndСloud = "mini_sun_icon"
     
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
@@ -36,18 +38,18 @@ class MainScreenViewController: UIViewController  {
         collectionView.delegate = self
         collectionView.alwaysBounceHorizontal = true
         collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
+        collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .red
         return collectionView
     }()
 
     let weatherItems = [
-        WeatherItem(time: "12:00", temperature: "25°"),
-        WeatherItem(time: "15:00", temperature: "25°"),
-        WeatherItem(time: "18:00", temperature: "25°"),
-        WeatherItem(time: "21:00", temperature: "21°"),
-        WeatherItem(time: "01:00", temperature: "20°"),
-        WeatherItem(time: "01:00", temperature: "20°")
+        WeatherItem(time: "12:00", temperature: "25°", emoji: "mini_sun_icon"),
+        WeatherItem(time: "15:00", temperature: "25°", emoji: "mini_sun_icon"),
+        WeatherItem(time: "18:00", temperature: "25°", emoji: "mini_sun_icon"),
+        WeatherItem(time: "21:00", temperature: "21°", emoji: "mini_sun_icon"),
+        WeatherItem(time: "01:00", temperature: "20°", emoji: "mini_sun_icon"),
+        WeatherItem(time: "04:00", temperature: "18°", emoji: "mini_sun_icon")
     ]
     
     let item = UIBarButtonItem(systemItem: .close)
@@ -67,6 +69,7 @@ class MainScreenViewController: UIViewController  {
         collectionLayout.minimumLineSpacing = 20
         
         // navigation Item title (Нижний Новгород)
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(buttonTappedAction))
         
         var image = UIImage(named: "search_icon")?.withRenderingMode(.alwaysOriginal)
@@ -280,7 +283,7 @@ class MainScreenViewController: UIViewController  {
     
         buttomContainer.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .red
+        collectionView.backgroundColor = UIColor.clear.withAlphaComponent(0)
         
         NSLayoutConstraint.activate([
             collectionView.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
@@ -290,20 +293,9 @@ class MainScreenViewController: UIViewController  {
         ])
     }
     
-//    func layoutCurrentWeatherViewGrey() {
-//        
-//      
-//    }
-}
-
-extension MainScreenViewController: UIScrollViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView === self.scrollView {
-            print("scroll view scrolling: \(scrollView.contentOffset.y)")
-        } else if collectionView === scrollView {
-            print("collection view scrolling: \(scrollView.contentOffset.y)")
-        }
+    func layoutCurrentWeatherViewGrey() {
+        
+      
     }
 }
 
@@ -316,13 +308,9 @@ extension MainScreenViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        print(indexPath.row)
         let weatherItem = weatherItems[indexPath.row]
         
-        cell.configure(
-            .init(time: weatherItem.time,
-                  temperature: weatherItem.temperature)
-        )
+        cell.configure(with: weatherItem.time, temperature: weatherItem.temperature, emoji: weatherItem.emoji)
         
         return cell
     }
