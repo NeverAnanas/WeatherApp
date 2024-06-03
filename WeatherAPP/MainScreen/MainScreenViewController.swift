@@ -29,7 +29,6 @@ class MainScreenViewController: UIViewController  {
     let lastTimeTemperature = UILabel()
     let rectangle = UIImageView()
     let collectionLayout = UICollectionViewFlowLayout()
-    let sunnyAndСloud = "mini_sun_icon"
     
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
@@ -256,9 +255,6 @@ class MainScreenViewController: UIViewController  {
         
         buttomContainer.addSubview(lastTimeTemperature)
         lastTimeTemperature.translatesAutoresizingMaskIntoConstraints = false
-        
-        //        lastTimeTemperature.text = "13 августа, пт"
-        //        lastTimeTemperature.font = .systemFont(ofSize: 16, weight: .medium)
         
         let attributedString = NSMutableAttributedString(
             string: "13 августа, пт",
