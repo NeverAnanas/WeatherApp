@@ -17,6 +17,7 @@
 		AD024B7F2B7F430C00785B6E /* WeatherAPPUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD024B7E2B7F430C00785B6E /* WeatherAPPUITestsLaunchTests.swift */; };
 		ADC6AF812C08695A00AA864C /* WeatherItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6AF802C08695A00AA864C /* WeatherItemCell.swift */; };
 		ADC6AF842C0C630100AA864C /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6AF832C0C630100AA864C /* SecondViewController.swift */; };
+		ADC6AF882C0DF44600AA864C /* WeatherCellGray.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6AF872C0DF44600AA864C /* WeatherCellGray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		AD024B7E2B7F430C00785B6E /* WeatherAPPUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPPUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		ADC6AF802C08695A00AA864C /* WeatherItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherItemCell.swift; sourceTree = "<group>"; };
 		ADC6AF832C0C630100AA864C /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
+		ADC6AF872C0DF44600AA864C /* WeatherCellGray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCellGray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 		AD024B4F2B7F430B00785B6E = {
 			isa = PBXGroup;
 			children = (
+				ADC6AF872C0DF44600AA864C /* WeatherCellGray.swift */,
 				AD024B5A2B7F430B00785B6E /* WeatherAPP */,
 				AD024B712B7F430C00785B6E /* WeatherAPPTests */,
 				AD024B7B2B7F430C00785B6E /* WeatherAPPUITests */,
@@ -285,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD024B602B7F430B00785B6E /* MainScreenViewController.swift in Sources */,
+				ADC6AF882C0DF44600AA864C /* WeatherCellGray.swift in Sources */,
 				AD024B5C2B7F430B00785B6E /* AppDelegate.swift in Sources */,
 				AD024B5E2B7F430B00785B6E /* SceneDelegate.swift in Sources */,
 				ADC6AF842C0C630100AA864C /* SecondViewController.swift in Sources */,
