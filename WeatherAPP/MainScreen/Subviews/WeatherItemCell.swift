@@ -2,8 +2,13 @@ import UIKit
 
 class WeatherItemCell: UICollectionViewCell {
     
+    struct WeatherItem {
+        let time: String
+        let temperature: String
+        let emoji: String
+    }
+    
     private let timeLabel = UILabel()
-    private let containerBackground = UIView()
     private let temperatureLabel = UILabel()
     private let emojiImageView = UIImageView()
     
