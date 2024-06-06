@@ -3,11 +3,19 @@ import UIKit
 
 class WeatherCellGray: UIView {
     
-    let buttomContainer = UIImageView()
+    struct WeatherDay {
+        let date: String
+        let temperature: String
+        let feelTemperature: String
+        let dayOfWeek: String
+        let eachHourForecast: [WeatherItemCell.WeatherItem]
+    }
+    
+    let buttomContainer = UIView()
     let lastWeatherIconViewGrey = UIImageView()
-    let lastTemperatureLabel = UILabel()
-    let lastTemperatureLabelBlack = UILabel()
-    let lastTimeTemperature = UILabel()
+    let currentFeelTemperatureLabel = UILabel()
+    let currentTemperatureLabelBlack = UILabel()
+    let dateLabel = UILabel()
     let collectionLayout = UICollectionViewFlowLayout()
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
@@ -21,22 +29,65 @@ class WeatherCellGray: UIView {
         return collectionView
     }()
     
-    private var weatherItems: [WeatherItem] = []
+    var lineView = LineView()
+    
+    class LineView: UIView {
+        override func draw(_ rect: CGRect) {
+            guard let context = UIGraphicsGetCurrentContext() else {
+                return
+            }
+            
+            context.setStrokeColor(UIColor(named: "light_gray")?.cgColor ?? UIColor.gray.cgColor)
+            
+            context.setLineWidth(2.0)
+            
+            let startPoint = CGPoint(x: rect.minX, y: rect.midY)
+            let endPoint = CGPoint(x: rect.maxX, y: rect.midY)
+            
+            context.move(to: startPoint)
+            
+            context.addLine(to: endPoint)
+            
+            context.strokePath()
+        }
+    }
+    
+    private var weatherItems: [WeatherItemCell.WeatherItem] = []
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        backgroundColor = UIColor(named: "very_light_gray")
+        
         collectionLayout.itemSize = CGSize(width: 73, height: 114)
         collectionLayout.scrollDirection = .horizontal
-        collectionLayout.minimumInteritemSpacing = 20
-        collectionLayout.minimumLineSpacing = 20
+        collectionLayout.minimumInteritemSpacing = 8
+        collectionLayout.minimumLineSpacing = 8
         
+        addSubview(buttomContainer)
         buttomContainer.isUserInteractionEnabled = true
         buttomContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        buttomContainer.image = UIImage(named: "backgroundGrey")
-        buttomContainer.contentMode = .scaleAspectFit
+        NSLayoutConstraint.activate([
+            buttomContainer.trailingAnchor.constraint(equalTo: trailingAnchor),
+            buttomContainer.leadingAnchor.constraint(equalTo: leadingAnchor),
+            buttomContainer.topAnchor.constraint(equalTo: topAnchor),
+            buttomContainer.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
         
+        layer.cornerRadius = 16
+        
+        buttomContainer.addSubview(lineView)
+        lineView.frame = CGRect(x: .zero, y: .zero, width: 303, height: .zero)
+        lineView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            lineView.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 60),
+            lineView.leftAnchor.constraint(equalTo: buttomContainer.leftAnchor, constant: 20),
+            lineView.rightAnchor.constraint(equalTo: buttomContainer.rightAnchor, constant: -20),
+            lineView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+
         // image grey
         
         buttomContainer.addSubview(lastWeatherIconViewGrey)
@@ -46,58 +97,36 @@ class WeatherCellGray: UIView {
         
         NSLayoutConstraint.activate([
             lastWeatherIconViewGrey.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
-            lastWeatherIconViewGrey.rightAnchor.constraint(equalTo: buttomContainer.rightAnchor, constant: -20),
+            lastWeatherIconViewGrey.rightAnchor.constraint(equalTo: lineView.rightAnchor),
         ])
         
         // text temperature
         
-        buttomContainer.addSubview(lastTemperatureLabel)
-        lastTemperatureLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        lastTemperatureLabel.text = "29°"
-        lastTemperatureLabel.font = .systemFont(ofSize: 17, weight: .bold)
-        lastTemperatureLabel.textColor = .gray
+        buttomContainer.addSubview(currentFeelTemperatureLabel)
+        currentFeelTemperatureLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            lastTemperatureLabel.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
-            lastTemperatureLabel.rightAnchor.constraint(equalTo: lastWeatherIconViewGrey.leftAnchor, constant: -16),
-            lastTemperatureLabel.centerYAnchor.constraint(equalTo: lastWeatherIconViewGrey.centerYAnchor)
+            currentFeelTemperatureLabel.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
+            currentFeelTemperatureLabel.rightAnchor.constraint(equalTo: lastWeatherIconViewGrey.leftAnchor, constant: -16),
+            currentFeelTemperatureLabel.centerYAnchor.constraint(equalTo: lastWeatherIconViewGrey.centerYAnchor)
         ])
         
-        buttomContainer.addSubview(lastTemperatureLabelBlack)
-        lastTemperatureLabelBlack.translatesAutoresizingMaskIntoConstraints = false
-        
-        lastTemperatureLabelBlack.text = "25°"
-        lastTemperatureLabelBlack.font = .systemFont(ofSize: 17, weight: .bold)
+        buttomContainer.addSubview(currentTemperatureLabelBlack)
+        currentTemperatureLabelBlack.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            lastTemperatureLabelBlack.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
-            lastTemperatureLabelBlack.rightAnchor.constraint(equalTo: lastTemperatureLabel.leftAnchor, constant: -8),
-            lastTemperatureLabelBlack.centerYAnchor.constraint(equalTo: lastWeatherIconViewGrey.centerYAnchor)
+            currentTemperatureLabelBlack.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
+            currentTemperatureLabelBlack.rightAnchor.constraint(equalTo: currentFeelTemperatureLabel.leftAnchor, constant: -8),
+            currentTemperatureLabelBlack.centerYAnchor.constraint(equalTo: lastWeatherIconViewGrey.centerYAnchor)
         ])
         
-        buttomContainer.addSubview(lastTimeTemperature)
-        lastTimeTemperature.translatesAutoresizingMaskIntoConstraints = false
-        
-        let attributedString = NSMutableAttributedString(
-            string: "13 августа, пт",
-            attributes: [
-                .font: UIFont.systemFont(
-                    ofSize: 16,
-                    weight: .medium
-                )
-            ])
-        
-        attributedString.addAttributes(
-            [.foregroundColor: UIColor.gray],
-            range: NSRange(location: 12, length: 2))
-        
-        lastTimeTemperature.attributedText = attributedString
+        buttomContainer.addSubview(dateLabel)
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            lastTimeTemperature.topAnchor.constraint(equalTo: buttomContainer.topAnchor),
-            lastTimeTemperature.centerYAnchor.constraint(equalTo: lastWeatherIconViewGrey.centerYAnchor),
-            lastTimeTemperature.leftAnchor.constraint(equalTo: buttomContainer.leftAnchor, constant: 20)
+            dateLabel.topAnchor.constraint(equalTo: buttomContainer.topAnchor),
+            dateLabel.centerYAnchor.constraint(equalTo: lastWeatherIconViewGrey.centerYAnchor),
+            dateLabel.leftAnchor.constraint(equalTo: lineView.leftAnchor)
         ])
         
         buttomContainer.addSubview(collectionView)
@@ -106,15 +135,62 @@ class WeatherCellGray: UIView {
         
         NSLayoutConstraint.activate([
             collectionView.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
-            collectionView.leadingAnchor.constraint(equalTo: buttomContainer.leadingAnchor, constant: 20),
-            collectionView.topAnchor.constraint(equalTo: lastTimeTemperature.bottomAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: buttomContainer.trailingAnchor, constant: -20)
+            collectionView.leadingAnchor.constraint(equalTo: lineView.leadingAnchor),
+            collectionView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
+            collectionView.trailingAnchor.constraint(equalTo: buttomContainer.trailingAnchor)
         ])
     }
     
-    func setWeather(_ items: [WeatherItem]) {
-        weatherItems = items
+    private func setTemperature(temperature: String, feelTemperature: String) {
+        let nowTemperature = NSMutableAttributedString(
+            string: temperature,
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .bold
+                )]
+            )
+        currentTemperatureLabelBlack.attributedText = nowTemperature
+        
+        let feelingTemperature = NSMutableAttributedString(
+            string: feelTemperature,
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .bold),
+                    .foregroundColor: UIColor.gray
+                ]
+        )
+        currentFeelTemperatureLabel.attributedText = feelingTemperature
+        
+    }
+    
+    func setWeather(day: WeatherDay) {
+        weatherItems = day.eachHourForecast
+
+        setDate(date: day.date, dayOfTheWeek: day.dayOfWeek)
+        setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
+        
         collectionView.reloadData()
+    }
+    
+    private func setDate(date: String, dayOfTheWeek: String) {
+        let text = NSMutableAttributedString(
+            string: date + ", ",
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 16,
+                    weight: .medium
+                )
+            ])
+        
+        let textForDayOfTheWeek = NSMutableAttributedString(
+            string: dayOfTheWeek,
+            attributes: [.foregroundColor: UIColor.gray])
+        
+        text.append(textForDayOfTheWeek)
+        
+        dateLabel.attributedText = text
     }
     
 }
