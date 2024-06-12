@@ -72,11 +72,22 @@ class MainScreenViewController: UIViewController  {
     
     let item = UIBarButtonItem(systemItem: .close)
 
-    // MARK: - ViewDidLoad
+    private var service = WeatherService()
     
+    // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        service.fetchWeather(for: "Nizhniy Novgorod") { data in
+            DispatchQueue.main.sync {
+                guard let data else { return }
+            
+                let temp = String(Int(data.temperature)) + "°"
+                var description = data.description
+                self.currentTemperatureLabel.text = temp
+            }
+        }
     
         weatherCellGray.setWeather(day: day1)
         weatherCellGray2.setWeather(day: day2)
