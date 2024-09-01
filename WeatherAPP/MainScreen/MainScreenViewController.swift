@@ -8,6 +8,7 @@ import UIKit
 class MainScreenViewController: UIViewController  {
     
     let mainView = WeatherMainView()
+    let weatherItemsView = WeatherItemsView()
 
     let weatherItemsForMonday = [
         WeatherItemCell.WeatherItem(time: "12:00", temperature: "25°", emoji: "mini_sun_icon"),
@@ -36,10 +37,11 @@ class MainScreenViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        layoutCurrentWeatherView()
-//        setupSubviews()
+        let mockDay = WeatherCellGray.WeatherDay(
+            date: "15 августа", temperature: "25°", feelTemperature: "29°", dayOfWeek: "пн", eachHourForecast: weatherItemsForMonday)
+    
+        weatherItemsView.setWeather(days: [mockDay, mockDay, mockDay, mockDay])
         setInitialInfo()
-        
         makeWeatherRequest()
     }
     
@@ -189,15 +191,25 @@ class MainScreenViewController: UIViewController  {
         
         setFeelsLikeTemperature(description: "Ясно", temp: "35")
         
-        view.addSubview(mainView)
-        mainView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(weatherItemsView)
+        weatherItemsView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainView.topAnchor.constraint(equalTo: view.topAnchor),
-            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            mainView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            weatherItemsView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            weatherItemsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            weatherItemsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            weatherItemsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+//        view.addSubview(mainView)
+//        mainView.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            mainView.topAnchor.constraint(equalTo: view.topAnchor),
+//            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            mainView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+//        ])
     }
     
     private func setToday(number: String, month: String, dayWeek: String) {

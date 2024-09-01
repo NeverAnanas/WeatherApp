@@ -1,7 +1,8 @@
 import UIKit
 
-
-class WeatherCellGray: UIView {
+class WeatherCellGray: UICollectionViewCell {
+    
+    static let id = "WeatherCellGray"
     
     struct WeatherDay {
         let date: String
@@ -20,12 +21,15 @@ class WeatherCellGray: UIView {
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
         
+        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.alwaysBounceHorizontal = true
         collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInset = .init(top: .zero, left: 20, bottom: .zero, right: 20)
+        
         return collectionView
     }()
     
@@ -63,6 +67,7 @@ class WeatherCellGray: UIView {
         collectionLayout.scrollDirection = .horizontal
         collectionLayout.minimumInteritemSpacing = 8
         collectionLayout.minimumLineSpacing = 8
+//        collectionLayout.
         
         addSubview(buttomContainer)
         buttomContainer.isUserInteractionEnabled = true
@@ -135,7 +140,7 @@ class WeatherCellGray: UIView {
         
         NSLayoutConstraint.activate([
             collectionView.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
-            collectionView.leadingAnchor.constraint(equalTo: lineView.leadingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: buttomContainer.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: buttomContainer.trailingAnchor)
         ])

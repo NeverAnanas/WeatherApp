@@ -1,10 +1,3 @@
-//
-//  WeatherMainView.swift
-//  WeatherAPP
-//
-//  Created by Анастасия Неверова on 28.08.2024.
-//
-
 import UIKit
 
 class WeatherMainView: UIView {
@@ -65,6 +58,8 @@ class WeatherMainView: UIView {
         
         topContainer.isUserInteractionEnabled = true
     }
+    
+    // MARK: Add ScrollView and Blue Container
     
     func setupSubviews() {
         scrollView.alwaysBounceVertical = true
@@ -158,51 +153,51 @@ class WeatherMainView: UIView {
         ])
         
         // background image grey
-        
-        scrollView.addSubview(weatherCellGray)
-        weatherCellGray.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray.topAnchor.constraint(equalTo: topContainer.bottomAnchor, constant: 20),
-            weatherCellGray.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray.heightAnchor.constraint(equalToConstant: 206)
-        ])
-        
-        scrollView.addSubview(weatherCellGray2)
-        weatherCellGray2.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray2.topAnchor.constraint(equalTo: weatherCellGray.bottomAnchor, constant: 8),
-            weatherCellGray2.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray2.heightAnchor.constraint(equalToConstant: 206)
-        ])
-        
-        scrollView.addSubview(weatherCellGray3)
-        weatherCellGray3.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray3.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray3.topAnchor.constraint(equalTo: weatherCellGray2.bottomAnchor, constant: 8),
-            weatherCellGray3.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray3.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray3.heightAnchor.constraint(equalToConstant: 206)
-        ])
-        
-        scrollView.addSubview(weatherCellGray4)
-        weatherCellGray4.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray4.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray4.topAnchor.constraint(equalTo: weatherCellGray3.bottomAnchor, constant: 8),
-            weatherCellGray4.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray4.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray4.heightAnchor.constraint(equalToConstant: 206),
-            weatherCellGray4.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10)
-        ])
+//        
+//        scrollView.addSubview(weatherCellGray)
+//        weatherCellGray.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            weatherCellGray.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+//            weatherCellGray.topAnchor.constraint(equalTo: topContainer.bottomAnchor, constant: 20),
+//            weatherCellGray.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
+//            weatherCellGray.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+//            weatherCellGray.heightAnchor.constraint(equalToConstant: 206)
+//        ])
+//        
+//        scrollView.addSubview(weatherCellGray2)
+//        weatherCellGray2.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            weatherCellGray2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+//            weatherCellGray2.topAnchor.constraint(equalTo: weatherCellGray.bottomAnchor, constant: 8),
+//            weatherCellGray2.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
+//            weatherCellGray2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+//            weatherCellGray2.heightAnchor.constraint(equalToConstant: 206)
+//        ])
+//        
+//        scrollView.addSubview(weatherCellGray3)
+//        weatherCellGray3.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            weatherCellGray3.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+//            weatherCellGray3.topAnchor.constraint(equalTo: weatherCellGray2.bottomAnchor, constant: 8),
+//            weatherCellGray3.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
+//            weatherCellGray3.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+//            weatherCellGray3.heightAnchor.constraint(equalToConstant: 206)
+//        ])
+//        
+//        scrollView.addSubview(weatherCellGray4)
+//        weatherCellGray4.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            weatherCellGray4.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+//            weatherCellGray4.topAnchor.constraint(equalTo: weatherCellGray3.bottomAnchor, constant: 8),
+//            weatherCellGray4.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
+//            weatherCellGray4.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+//            weatherCellGray4.heightAnchor.constraint(equalToConstant: 206),
+//            weatherCellGray4.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10)
+//        ])
     }
 }
 
