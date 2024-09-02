@@ -200,16 +200,6 @@ class MainScreenViewController: UIViewController  {
             weatherItemsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             weatherItemsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-//        view.addSubview(mainView)
-//        mainView.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            mainView.topAnchor.constraint(equalTo: view.topAnchor),
-//            mainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            mainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//            mainView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-//        ])
     }
     
     private func setToday(number: String, month: String, dayWeek: String) {
