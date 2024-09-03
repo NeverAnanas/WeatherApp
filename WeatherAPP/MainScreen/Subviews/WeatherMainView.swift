@@ -16,7 +16,7 @@ class WeatherMainView: UIView {
         setInitialInfo()
     }
     
-    lazy var day1 = WeatherCellGray.WeatherDay(
+    lazy var day1 = WeatherCellGray.WeatherCellGrayViewModel(
         date: "13 августа",
         temperature: "25°",
         feelTemperature: "29°",
@@ -24,7 +24,7 @@ class WeatherMainView: UIView {
         eachHourForecast: WeatherData.weatherItemsForMonday
     )
     
-    lazy var day2 = WeatherCellGray.WeatherDay(
+    lazy var day2 = WeatherCellGray.WeatherCellGrayViewModel(
         date: "14 августа",
         temperature: "25°",
         feelTemperature: "26°",
@@ -32,7 +32,7 @@ class WeatherMainView: UIView {
         eachHourForecast: WeatherData.weatherItemsForMonday
     )
     
-    lazy var day3 = WeatherCellGray.WeatherDay(
+    lazy var day3 = WeatherCellGray.WeatherCellGrayViewModel(
         date: "15 августа",
         temperature: "23°",
         feelTemperature: "20°",
@@ -40,7 +40,7 @@ class WeatherMainView: UIView {
         eachHourForecast: WeatherData.weatherItemsForMonday
     )
     
-    lazy var day4 = WeatherCellGray.WeatherDay(
+    lazy var day4 = WeatherCellGray.WeatherCellGrayViewModel(
         date: "16 августа",
         temperature: "25°",
         feelTemperature: "20°",

@@ -31,7 +31,7 @@ struct Main: Codable {
 }
 
 struct Weather: Codable {
-    let textDescription: String
+    let textDescription: String // Погодные условия в группе
     let id: Int        // Идникатор погодных условий
     let main: String   // Группа параметров погоды (дождь, снег, облака и т. д.)
     let icon: String   // Идентор значка погоды
@@ -43,7 +43,6 @@ struct Weather: Codable {
         case icon
     }
 }
-
 
 class WeatherService {
     let apiKey = "800ca88bde916f0238757457c4e63bda"
@@ -60,10 +59,10 @@ class WeatherService {
         }
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data {
+            if let noOptionalData = data {
                 let decoder = JSONDecoder()
                 do {
-                    let weatherResponse = try decoder.decode(WeatherResponse.self, from: data)
+                    let weatherResponse = try decoder.decode(WeatherResponse.self, from: noOptionalData)
                     
                     let forecasts = weatherResponse.list.map { forecastDay in
                         Forecast(

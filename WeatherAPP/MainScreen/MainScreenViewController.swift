@@ -37,7 +37,7 @@ class MainScreenViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let mockDay = WeatherCellGray.WeatherDay(
+        let mockDay = WeatherCellGray.WeatherCellGrayViewModel(
             date: "15 августа", temperature: "25°", feelTemperature: "29°", dayOfWeek: "пн", eachHourForecast: weatherItemsForMonday)
     
         weatherItemsView.setWeather(days: [mockDay, mockDay, mockDay, mockDay])
@@ -55,16 +55,16 @@ class MainScreenViewController: UIViewController  {
                 guard let weatherForecast else { return }
                 
                 var result = self.splitIntoDays(forecasts: weatherForecast)
-                print(result)
+                self.weatherItemsView.saveArray(array: result)
             }
         }
     }
    
     // MARK: GPT
     
-    func convertToDays(forecasts: [Forecast]) -> [WeatherCellGray.WeatherDay] {
+    func convertToDays(forecasts: [Forecast]) -> [WeatherCellGray.WeatherCellGrayViewModel] {
         let splitForecasts = splitIntoDays(forecasts: forecasts)
-            var weatherDays: [WeatherCellGray.WeatherDay] = []
+            var weatherDays: [WeatherCellGray.WeatherCellGrayViewModel] = []
             
             let dateFormatter = DateFormatter()
             dateFormatter.locale = Locale(identifier: "ru_RU")
@@ -104,7 +104,7 @@ class MainScreenViewController: UIViewController  {
                 }
                 
                 // Создаем WeatherDay и добавляем его в массив
-                let weatherDay = WeatherCellGray.WeatherDay(
+                let weatherDay = WeatherCellGray.WeatherCellGrayViewModel(
                     date: date,
                     temperature: temperatureString,
                     feelTemperature: feelTemperatureString,

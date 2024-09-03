@@ -4,7 +4,7 @@ class WeatherCellGray: UICollectionViewCell {
     
     static let id = "WeatherCellGray"
     
-    struct WeatherDay {
+    struct WeatherCellGrayViewModel {
         let date: String
         let temperature: String
         let feelTemperature: String
@@ -34,6 +34,15 @@ class WeatherCellGray: UICollectionViewCell {
     }()
     
     var lineView = LineView()
+    
+    func setWeather(day: WeatherCellGrayViewModel) {
+        weatherItems = day.eachHourForecast
+
+        setDate(date: day.date, dayOfTheWeek: day.dayOfWeek)
+        setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
+        
+        collectionView.reloadData()
+    }
     
     class LineView: UIView {
         override func draw(_ rect: CGRect) {
@@ -168,15 +177,6 @@ class WeatherCellGray: UICollectionViewCell {
         )
         currentFeelTemperatureLabel.attributedText = feelingTemperature
         
-    }
-    
-    func setWeather(day: WeatherDay) {
-        weatherItems = day.eachHourForecast
-
-        setDate(date: day.date, dayOfTheWeek: day.dayOfWeek)
-        setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
-        
-        collectionView.reloadData()
     }
     
     private func setDate(date: String, dayOfTheWeek: String) {

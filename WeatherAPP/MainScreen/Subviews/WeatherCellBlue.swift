@@ -3,11 +3,11 @@ import UIKit
 class WheatherCellBlue: UICollectionViewCell {
     static let id = "WeatherCellBlue"
     
-    let topContainer = UIImageView()
-    let currentDayLabel = UILabel()
-    let currentWeatherIconView = UIImageView()
-    let currentTemperatureLabel = UILabel()
-    let currentFeelTemperatureLabel = UILabel()
+    private let topContainer = UIImageView()
+    private let currentDayLabel = UILabel()
+    private let currentWeatherIconView = UIImageView()
+    private let currentTemperatureLabel = UILabel()
+    private let currentFeelTemperatureLabel = UILabel()
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -16,28 +16,42 @@ class WheatherCellBlue: UICollectionViewCell {
         layoutCurrentWeatherView()
     }
     
-    func setupSubviews() {
+    struct WheatherCellBlueViewModel {
+        let currentDay: String
+        let currentTemperature: String
+        let currentFeelTemperature: String
+    }
+    
+    func configure(model: WheatherCellBlueViewModel) {
+        currentDayLabel.text = model.currentDay
+        currentTemperatureLabel.text = model.currentTemperature
+        currentFeelTemperatureLabel.text = model.currentFeelTemperature
+    }
+    
+    // MARK: - Private
+    
+    private func setupSubviews() {
         topContainer.image = UIImage(named: "Group 33510")
         topContainer.clipsToBounds = true
       //  topContainer.contentMode = .scaleAspectFill
         
-        currentDayLabel.text = "Сегодня, 12 августа, чт"
+//        currentDayLabel.text = "Сегодня, 12 августа, чт"
         currentDayLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         currentDayLabel.textColor = .white
         currentDayLabel.textAlignment = .center
         
         currentWeatherIconView.image = UIImage(named: "Sun")
         
-        currentTemperatureLabel.text = "30°"
+//        currentTemperatureLabel.text = "30°"
         currentTemperatureLabel.font = .systemFont(ofSize: 48, weight: .bold)
         currentTemperatureLabel.textColor = .white
         
-        currentFeelTemperatureLabel.text = "Ясно, ощущается как 32°"
+//        currentFeelTemperatureLabel.text = "Ясно, ощущается как 32°"
         currentFeelTemperatureLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         currentFeelTemperatureLabel.textColor = .white
     }
     
-    func layoutCurrentWeatherView() {
+    private func layoutCurrentWeatherView() {
         
         addSubview(topContainer)
         topContainer.translatesAutoresizingMaskIntoConstraints = false
