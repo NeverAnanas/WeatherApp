@@ -48,10 +48,11 @@ class WeatherService {
     let apiKey = "800ca88bde916f0238757457c4e63bda"
     let lat = 56
     let lon = 44
+    let lang = "ru"
 
     
     func fetchWeather(for city: String, completion: @escaping ([Forecast]?) -> Void) {
-        let baseURL = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&appid=\(apiKey)&units=metric"
+        let baseURL = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&lang=ar&appid=\(apiKey)&units=metric"
         
         guard let url = URL(string: baseURL) else {
             completion(nil)

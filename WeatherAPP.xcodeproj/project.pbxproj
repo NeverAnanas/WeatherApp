@@ -23,6 +23,7 @@
 		ADE736772C7F39B100EC7AAE /* WeatherItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE736762C7F39B100EC7AAE /* WeatherItemsView.swift */; };
 		ADE736792C85ADEB00EC7AAE /* WeatherCellBlue.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE736782C85ADEB00EC7AAE /* WeatherCellBlue.swift */; };
 		ADE7367B2C8792C700EC7AAE /* DateConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7367A2C8792C700EC7AAE /* DateConverter.swift */; };
+		ADE7367D2C886C2600EC7AAE /* TemperatureConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7367C2C886C2600EC7AAE /* TemperatureConverter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		ADE736762C7F39B100EC7AAE /* WeatherItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherItemsView.swift; sourceTree = "<group>"; };
 		ADE736782C85ADEB00EC7AAE /* WeatherCellBlue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCellBlue.swift; sourceTree = "<group>"; };
 		ADE7367A2C8792C700EC7AAE /* DateConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateConverter.swift; sourceTree = "<group>"; };
+		ADE7367C2C886C2600EC7AAE /* TemperatureConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemperatureConverter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,10 +155,10 @@
 		ADC6AF7F2C08694400AA864C /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				ADE7367E2C88705300EC7AAE /* Converter */,
 				ADC6AF802C08695A00AA864C /* WeatherItemCell.swift */,
 				ADE736722C7F197400EC7AAE /* WeatherMainView.swift */,
 				ADE736762C7F39B100EC7AAE /* WeatherItemsView.swift */,
-				ADE7367A2C8792C700EC7AAE /* DateConverter.swift */,
 				ADC6AF872C0DF44600AA864C /* WeatherCellGray.swift */,
 				ADE736782C85ADEB00EC7AAE /* WeatherCellBlue.swift */,
 				ADC6AF8B2C11B62B00AA864C /* WeatherService.swift */,
@@ -170,6 +172,15 @@
 				ADC6AF832C0C630100AA864C /* SecondViewController.swift */,
 			);
 			path = SecondScreen;
+			sourceTree = "<group>";
+		};
+		ADE7367E2C88705300EC7AAE /* Converter */ = {
+			isa = PBXGroup;
+			children = (
+				ADE7367A2C8792C700EC7AAE /* DateConverter.swift */,
+				ADE7367C2C886C2600EC7AAE /* TemperatureConverter.swift */,
+			);
+			path = Converter;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -305,6 +316,7 @@
 				ADE736732C7F197400EC7AAE /* WeatherMainView.swift in Sources */,
 				AD024B602B7F430B00785B6E /* MainScreenViewController.swift in Sources */,
 				ADC6AF882C0DF44600AA864C /* WeatherCellGray.swift in Sources */,
+				ADE7367D2C886C2600EC7AAE /* TemperatureConverter.swift in Sources */,
 				AD024B5C2B7F430B00785B6E /* AppDelegate.swift in Sources */,
 				ADE7367B2C8792C700EC7AAE /* DateConverter.swift in Sources */,
 				AD024B5E2B7F430B00785B6E /* SceneDelegate.swift in Sources */,

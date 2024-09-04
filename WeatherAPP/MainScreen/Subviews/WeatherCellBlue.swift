@@ -26,6 +26,7 @@ class WheatherCellBlue: UICollectionViewCell {
         currentDayLabel.text = model.currentDay
         currentTemperatureLabel.text = model.currentTemperature
         currentFeelTemperatureLabel.text = model.currentFeelTemperature
+        
     }
     
     // MARK: - Private
@@ -33,7 +34,6 @@ class WheatherCellBlue: UICollectionViewCell {
     private func setupSubviews() {
         topContainer.image = UIImage(named: "Group 33510")
         topContainer.clipsToBounds = true
-      //  topContainer.contentMode = .scaleAspectFill
         
 //        currentDayLabel.text = "Сегодня, 12 августа, чт"
         currentDayLabel.font = .systemFont(ofSize: 14, weight: .semibold)
