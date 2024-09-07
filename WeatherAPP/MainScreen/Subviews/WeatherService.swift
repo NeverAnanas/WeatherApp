@@ -44,14 +44,22 @@ struct Weather: Codable {
     }
 }
 
+struct WeatherServiceCityResponse: Codable {
+    let name: String
+}
+
+struct WeatherServiceResponse {
+    let city: String
+    let forecasts: [Forecast]
+}
+
 class WeatherService {
     let apiKey = "800ca88bde916f0238757457c4e63bda"
-    let lat = 56
-    let lon = 44
+    let lat: Float = 56.296505
+    let lon: Float = 43.936058
     let lang = "ru"
-
     
-    func fetchWeather(for city: String, completion: @escaping ([Forecast]?) -> Void) {
+    func fetchWeather(for city: String, completion: @escaping (WeatherServiceResponse?) -> Void) {
         let baseURL = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&lang=ar&appid=\(apiKey)&units=metric"
         
         guard let url = URL(string: baseURL) else {
@@ -59,7 +67,9 @@ class WeatherService {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self else { return }
+            
             if let noOptionalData = data {
                 let decoder = JSONDecoder()
                 do {
@@ -77,7 +87,15 @@ class WeatherService {
                         )
                     }
                     
-                    completion(forecasts)
+                    self.fetchCity(lat: lat, lon: lon) { nameOfCity in
+                        guard let nameOfCity else {
+                            completion(nil)
+                            return
+                        }
+                        
+                        let response = WeatherServiceResponse(city: nameOfCity, forecasts: forecasts)
+                        completion(response)
+                    }
                 } catch {
 //                    assertionFailure()
                     completion(nil)
@@ -87,7 +105,29 @@ class WeatherService {
                 completion(nil)
             }
         }
+        task.resume()
+    }
+    
+    func fetchCity(lat: Float, lon: Float, completion: @escaping (String?) -> Void) {
+        let baseURLCiry = "https://api.openweathermap.org/geo/1.0/reverse?lat=\(lat)&lon=\(lon)&limit=1&appid=\(apiKey)"
+        guard let urlCity = URL(string: baseURLCiry) else {
+            completion(nil)
+            return
+        }
         
+        let task = URLSession.shared.dataTask(with: urlCity) { data, response, error in
+            if let data = data {
+                let decoder = JSONDecoder()
+                do {
+                    let cityResponse = try decoder.decode([WeatherServiceCityResponse].self, from: data)
+                    completion(cityResponse.first?.name)
+                } catch {
+                    completion(nil)
+                }
+            } else {
+                completion(nil)
+            }
+        }
         task.resume()
     }
     
