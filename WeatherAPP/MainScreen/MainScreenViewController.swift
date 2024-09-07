@@ -50,12 +50,13 @@ class MainScreenViewController: UIViewController  {
     }
     
     private func makeWeatherRequest() {
-        service.fetchWeather(for: "Nizhniy Novgorod") { weatherForecast in
+        service.fetchWeather(for: "Nizhniy Novgorod") { response in
             DispatchQueue.main.sync {
-                guard let weatherForecast else { return }
+                guard let response else { return }
                 
-                var result = self.splitIntoDays(forecasts: weatherForecast)
+                var result = self.splitIntoDays(forecasts: response.forecasts)
                 self.weatherItemsView.saveArray(array: result)
+                self.navigationItem.title = response.city
             }
         }
     }
@@ -185,7 +186,7 @@ class MainScreenViewController: UIViewController  {
             action: #selector(buttonTappedAction)
         )
         
-        navigationItem.title = "Нижний Новгород"
+       // navigationItem.title = "Нижний Новгород"
         
         view.backgroundColor = .systemBackground
         
