@@ -8,7 +8,6 @@ class WeatherCellGray: UICollectionViewCell {
         let date: String
         let temperature: String
         let feelTemperature: String
-        let dayOfWeek: String
         let eachHourForecast: [WeatherItemCell.WeatherItem]
     }
     
@@ -38,7 +37,7 @@ class WeatherCellGray: UICollectionViewCell {
     func setWeather(day: WeatherCellGrayViewModel) {
         weatherItems = day.eachHourForecast
 
-        setDate(date: day.date, dayOfTheWeek: day.dayOfWeek)
+        setDate(date: day.date)
         setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
         
         collectionView.reloadData()
@@ -179,9 +178,9 @@ class WeatherCellGray: UICollectionViewCell {
         
     }
     
-    private func setDate(date: String, dayOfTheWeek: String) {
+    private func setDate(date: String) {
         let text = NSMutableAttributedString(
-            string: date + ", ",
+            string: date,
             attributes: [
                 .font: UIFont.systemFont(
                     ofSize: 16,
@@ -189,11 +188,13 @@ class WeatherCellGray: UICollectionViewCell {
                 )
             ])
         
-        let textForDayOfTheWeek = NSMutableAttributedString(
-            string: dayOfTheWeek,
-            attributes: [.foregroundColor: UIColor.gray])
+        guard text.length >= 2 else {
+            dateLabel.attributedText = text
+            return
+        }
         
-        text.append(textForDayOfTheWeek)
+        let range = NSRange(location: text.length - 2, length: 2)
+        text.addAttribute(.foregroundColor, value: UIColor.gray, range: range)
         
         dateLabel.attributedText = text
     }

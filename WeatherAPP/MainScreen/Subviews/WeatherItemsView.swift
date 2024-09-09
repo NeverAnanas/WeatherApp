@@ -111,7 +111,6 @@ extension WeatherItemsView: UICollectionViewDataSource {
                 date: convertedDate,
                 temperature: convertedTemperature,
                 feelTemperature: convertedFeelsTemperature,
-                dayOfWeek: convertedDayOfTheWeek,
                 eachHourForecast: eachHourForecast
             )
             

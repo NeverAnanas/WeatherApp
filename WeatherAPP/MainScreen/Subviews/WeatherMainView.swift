@@ -11,51 +11,7 @@ class WeatherMainView: UIView {
     let currentWeatherIconView = UIImageView()
     let currentTemperatureLabel = UILabel()
     let currentFeelTemperatureLabel = UILabel()
-    
-    override func layoutSubviews() {
-        setInitialInfo()
-    }
-    
-    lazy var day1 = WeatherCellGray.WeatherCellGrayViewModel(
-        date: "13 августа",
-        temperature: "25°",
-        feelTemperature: "29°",
-        dayOfWeek: "пн",
-        eachHourForecast: WeatherData.weatherItemsForMonday
-    )
-    
-    lazy var day2 = WeatherCellGray.WeatherCellGrayViewModel(
-        date: "14 августа",
-        temperature: "25°",
-        feelTemperature: "26°",
-        dayOfWeek: "вт",
-        eachHourForecast: WeatherData.weatherItemsForMonday
-    )
-    
-    lazy var day3 = WeatherCellGray.WeatherCellGrayViewModel(
-        date: "15 августа",
-        temperature: "23°",
-        feelTemperature: "20°",
-        dayOfWeek: "ср",
-        eachHourForecast: WeatherData.weatherItemsForMonday
-    )
-    
-    lazy var day4 = WeatherCellGray.WeatherCellGrayViewModel(
-        date: "16 августа",
-        temperature: "25°",
-        feelTemperature: "20°",
-        dayOfWeek: "чт",
-        eachHourForecast: WeatherData.weatherItemsForMonday
-    )
-    
-    func setInitialInfo() {
-        weatherCellGray.setWeather(day: day1)
-        weatherCellGray2.setWeather(day: day2)
-        weatherCellGray3.setWeather(day: day3)
-        weatherCellGray4.setWeather(day: day4)
-        
-        topContainer.isUserInteractionEnabled = true
-    }
+
 }
 
 class WeatherData {

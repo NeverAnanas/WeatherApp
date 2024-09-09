@@ -37,10 +37,6 @@ class MainScreenViewController: UIViewController  {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let mockDay = WeatherCellGray.WeatherCellGrayViewModel(
-            date: "15 августа", temperature: "25°", feelTemperature: "29°", dayOfWeek: "пн", eachHourForecast: weatherItemsForMonday)
-    
-        weatherItemsView.setWeather(days: [mockDay, mockDay, mockDay, mockDay])
         setInitialInfo()
         makeWeatherRequest()
     }
@@ -109,7 +105,6 @@ class MainScreenViewController: UIViewController  {
                     date: date,
                     temperature: temperatureString,
                     feelTemperature: feelTemperatureString,
-                    dayOfWeek: dayOfWeek,
                     eachHourForecast: eachHourForecast
                 )
                 
