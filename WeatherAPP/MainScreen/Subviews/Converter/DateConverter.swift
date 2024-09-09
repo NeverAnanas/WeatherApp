@@ -4,9 +4,17 @@ class DateConverter {
     
     func convertDateToString(date: Date) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd, MMM"
+        let dayOfTheWeek = converterDayOfTheWeek(date: date)
         
-        return dateFormatter.string(from: date)
+        dateFormatter.dateFormat = "d MMMM"
+        
+        var string = dateFormatter.string(from: date) + ", " + dayOfTheWeek
+        
+        if Calendar.current.isDateInToday(date) {
+            string = "Сегодня, " + string
+        }
+        
+        return string
     }
     
     func converterDayOfTheWeek(date: Date) -> String {
@@ -28,11 +36,18 @@ class DateConverter {
     
     func getTimeFromDate(date: Date) -> String {
         let calendar = Calendar.current
-        let hour = calendar.component(.hour, from: date)
-        let minute = calendar.component(.minute, from: date)
+        var hour = String(calendar.component(.hour, from: date))
+        var minute = String(calendar.component(.minute, from: date))
+        
+        if hour.count == 1 {
+            hour = "0\(hour)"
+        }
+        if minute.count == 1{
+            minute = "0\(minute)"
+        }
+        
         let time = "\(hour):\(minute)"
         
         return time
     }
-    
 }
