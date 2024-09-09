@@ -67,7 +67,11 @@ class WeatherService {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 5
+        sessionConfig.timeoutIntervalForResource = 5
+        
+        let task = URLSession(configuration: sessionConfig).dataTask(with: url) { [weak self] data, response, error in
             guard let self else { return }
             
             if let noOptionalData = data {
