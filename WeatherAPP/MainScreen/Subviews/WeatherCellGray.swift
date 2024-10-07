@@ -8,8 +8,11 @@ class WeatherCellGray: UICollectionViewCell {
         let date: String
         let temperature: String
         let feelTemperature: String
+        let imageResolver: IImageResolver
         let eachHourForecast: [WeatherItemCell.WeatherItem]
     }
+    
+    private var imageResolver: IImageResolver?
     
     let buttomContainer = UIView()
     let lastWeatherIconViewGrey = UIImageView()
@@ -39,6 +42,11 @@ class WeatherCellGray: UICollectionViewCell {
 
         setDate(date: day.date)
         setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
+        
+        imageResolver = day.imageResolver
+        imageResolver?.resolve(completion: { [weak self] image in
+            self?.lastWeatherIconViewGrey.image = image
+        })
         
         collectionView.reloadData()
     }
@@ -210,7 +218,8 @@ extension WeatherCellGray: UICollectionViewDataSource {
         
         let weatherItem = weatherItems[indexPath.row]
         
-        cell.configure(with: weatherItem.time, temperature: weatherItem.temperature, emoji: weatherItem.emoji)
+        cell.configure(model: WeatherItemCell.WeatherItem(time: weatherItem.time, temperature: weatherItem.temperature, imageResolver: weatherItem.imageResolver)
+        )
         
         return cell
     }

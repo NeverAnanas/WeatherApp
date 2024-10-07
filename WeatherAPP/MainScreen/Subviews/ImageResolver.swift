@@ -21,11 +21,13 @@ class ImageResolver: IImageResolver {
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             
-            if let data = data {
-                let icon = UIImage(data: data)
-                completion(icon)
-            } else {
-                completion(nil)
+            DispatchQueue.main.async {
+                if let data = data {
+                    let icon = UIImage(data: data)
+                    completion(icon)
+                } else {
+                    completion(nil)
+                }
             }
         }
         task.resume()
