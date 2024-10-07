@@ -9,24 +9,6 @@ class MainScreenViewController: UIViewController  {
     
     let mainView = WeatherMainView()
     let weatherItemsView = WeatherItemsView()
-
-    let weatherItemsForMonday = [
-        WeatherItemCell.WeatherItem(time: "12:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "15:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "18:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "21:00", temperature: "21°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "01:00", temperature: "20°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "04:00", temperature: "18°", emoji: "mini_sun_icon")
-    ]
-    
-    let weatherItemsForSunday = [
-        WeatherItemCell.WeatherItem(time: "12:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "15:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "18:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "21:00", temperature: "21°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "01:00", temperature: "20°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "04:00", temperature: "18°", emoji: "mini_sun_icon")
-    ]
     
     let item = UIBarButtonItem(systemItem: .close)
 
@@ -47,10 +29,11 @@ class MainScreenViewController: UIViewController  {
     
     private func makeWeatherRequest() {
         service.fetchWeather(for: "Nizhniy Novgorod") { response in
-            DispatchQueue.main.sync {
+            DispatchQueue.main.async {
                 guard let response else { return }
                 
                 var result = self.splitIntoDays(forecasts: response.forecasts)
+                
                 self.weatherItemsView.saveArray(array: result)
                 self.navigationItem.title = response.city
             }
@@ -61,58 +44,59 @@ class MainScreenViewController: UIViewController  {
     
     func convertToDays(forecasts: [Forecast]) -> [WeatherCellGray.WeatherCellGrayViewModel] {
         let splitForecasts = splitIntoDays(forecasts: forecasts)
-            var weatherDays: [WeatherCellGray.WeatherCellGrayViewModel] = []
+        var weatherDays: [WeatherCellGray.WeatherCellGrayViewModel] = []
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateFormat = "d MMMM"
+        
+        let dayOfWeekFormatter = DateFormatter()
+        dayOfWeekFormatter.locale = Locale(identifier: "ru_RU")
+        dayOfWeekFormatter.dateFormat = "EEEE"
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale(identifier: "ru_RU")
+        timeFormatter.dateFormat = "HH:mm"
+        
+        for dailyForecasts in splitForecasts {
+            // Проверяем первый элемент для получения даты
+            guard let firstForecast = dailyForecasts.first else { continue }
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale(identifier: "ru_RU")
-            dateFormatter.dateFormat = "d MMMM"
+            // Форматируем дату и день недели
+            let date = dateFormatter.string(from: firstForecast.date)
+            let dayOfWeek = dayOfWeekFormatter.string(from: firstForecast.date)
             
-            let dayOfWeekFormatter = DateFormatter()
-            dayOfWeekFormatter.locale = Locale(identifier: "ru_RU")
-            dayOfWeekFormatter.dateFormat = "EEEE"
+            // Вычисляем средние значения температуры и температуры по ощущениям
+            let avgTemperature = dailyForecasts.map { $0.temperature }.reduce(0, +) / Double(dailyForecasts.count)
+            let avgFeelsLikeTemperature = dailyForecasts.map { $0.feelsLike }.reduce(0, +) / Double(dailyForecasts.count)
             
-            let timeFormatter = DateFormatter()
-            timeFormatter.locale = Locale(identifier: "ru_RU")
-            timeFormatter.dateFormat = "HH:mm"
+            // Форматируем средние значения в строки
+            let temperatureString = String(format: "%.1f", avgTemperature)
+            let feelTemperatureString = String(format: "%.1f", avgFeelsLikeTemperature)
             
-            for dailyForecasts in splitForecasts {
-                // Проверяем первый элемент для получения даты
-                guard let firstForecast = dailyForecasts.first else { continue }
-                
-                // Форматируем дату и день недели
-                let date = dateFormatter.string(from: firstForecast.date)
-                let dayOfWeek = dayOfWeekFormatter.string(from: firstForecast.date)
-                
-                // Вычисляем средние значения температуры и температуры по ощущениям
-                let avgTemperature = dailyForecasts.map { $0.temperature }.reduce(0, +) / Double(dailyForecasts.count)
-                let avgFeelsLikeTemperature = dailyForecasts.map { $0.feelsLike }.reduce(0, +) / Double(dailyForecasts.count)
-                
-                // Форматируем средние значения в строки
-                let temperatureString = String(format: "%.1f", avgTemperature)
-                let feelTemperatureString = String(format: "%.1f", avgFeelsLikeTemperature)
-                
-                // Создаем прогнозы для каждого временного интервала
-                let eachHourForecast = dailyForecasts.map { forecast in
-                    WeatherItemCell.WeatherItem(
-                        time: timeFormatter.string(from: forecast.date),
-                        temperature: String(format: "%.1f", forecast.temperature),
-                        emoji: forecast.icon
-                    )
-                }
-                
-                // Создаем WeatherDay и добавляем его в массив
-                let weatherDay = WeatherCellGray.WeatherCellGrayViewModel(
-                    date: date,
-                    temperature: temperatureString,
-                    feelTemperature: feelTemperatureString,
-                    eachHourForecast: eachHourForecast
+            // Создаем прогнозы для каждого временного интервала
+            let eachHourForecast = dailyForecasts.map { forecast in
+                WeatherItemCell.WeatherItem(
+                    time: timeFormatter.string(from: forecast.date),
+                    temperature: String(format: "%.1f", forecast.temperature),
+                    imageResolver: ImageResolver(imageName: forecast.icon)
                 )
-                
-                weatherDays.append(weatherDay)
             }
             
-            return weatherDays
+            // Создаем WeatherDay и добавляем его в массив
+            let weatherDay = WeatherCellGray.WeatherCellGrayViewModel(
+                date: date,
+                temperature: temperatureString,
+                feelTemperature: feelTemperatureString, 
+                imageResolver: ImageResolver(imageName: firstForecast.icon),
+                eachHourForecast: eachHourForecast
+            )
+            
+            weatherDays.append(weatherDay)
         }
+        
+        return weatherDays
+    }
     
     
     private func splitIntoDays(forecasts: [Forecast]) -> [[Forecast]] {

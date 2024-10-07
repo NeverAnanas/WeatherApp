@@ -102,7 +102,7 @@ extension WeatherItemsView: UICollectionViewDataSource {
             let eachHourForecast: [WeatherItemCell.WeatherItem] = forecast.map { forecast in
                 
                 let convertedTemp = converterTemperature.convertTemperatureToString(temperature: forecast.temperature)
-                let viewModel = WeatherItemCell.WeatherItem(time: getTimeFromDate.getTimeFromDate(date: forecast.date), temperature: convertedTemp, emoji: forecast.icon)
+                let viewModel = WeatherItemCell.WeatherItem(time: getTimeFromDate.getTimeFromDate(date: forecast.date), temperature: convertedTemp, imageResolver: ImageResolver(imageName: forecast.icon))
                 
                 return viewModel
             }
@@ -110,7 +110,8 @@ extension WeatherItemsView: UICollectionViewDataSource {
             let viewModel = WeatherCellGray.WeatherCellGrayViewModel(
                 date: convertedDate,
                 temperature: convertedTemperature,
-                feelTemperature: convertedFeelsTemperature,
+                feelTemperature: convertedFeelsTemperature, 
+                imageResolver: ImageResolver(imageName: "10d"),
                 eachHourForecast: eachHourForecast
             )
             
