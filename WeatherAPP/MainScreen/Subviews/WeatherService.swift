@@ -60,20 +60,47 @@ class WeatherService {
     let lang = "ru"
     
     func fetchWeather(for city: String, completion: @escaping (WeatherServiceResponse?) -> Void) {
-        let baseURL = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&lang=ar&appid=\(apiKey)&units=metric"
+        let baseURL = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&appid=\(apiKey)&units=metric"
         
         guard let url = URL(string: baseURL) else {
             completion(nil)
             return
         }
         
+        let mockedData = WeatherServiceResponse(
+            city: "Нижний Новгород",
+            forecasts: [
+                Forecast(
+                    date: Date(),
+                    temperature: 15,
+                    description: "Дождливо",
+                    feelsLike: 12, main: "Дождь",
+                    icon: "10d",
+                    id: 804
+                ),
+                Forecast(
+                    date: Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date(),
+                    temperature: 15,
+                    description: "Дождливо",
+                    feelsLike: 12,
+                    main: "Дождь",
+                    icon: "10d",
+                    id: 804
+                )
+            ]
+        )
+        
+        completion(mockedData)
+        
+        if true {
+            return
+        }
+        
         let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 5
-        sessionConfig.timeoutIntervalForResource = 5
         
         let task = URLSession(configuration: sessionConfig).dataTask(with: url) { [weak self] data, response, error in
             guard let self else { return }
-            
+                        
             if let noOptionalData = data {
                 let decoder = JSONDecoder()
                 do {
@@ -101,7 +128,7 @@ class WeatherService {
                         completion(response)
                     }
                 } catch {
-//                    assertionFailure()
+                    print(error)
                     completion(nil)
                 }
             } else {
