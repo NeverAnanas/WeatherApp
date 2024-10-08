@@ -1,15 +1,18 @@
 import UIKit
 
-
-class WeatherCellGray: UIView {
+class WeatherCellGray: UICollectionViewCell {
     
-    struct WeatherDay {
+    static let id = "WeatherCellGray"
+    
+    struct WeatherCellGrayViewModel {
         let date: String
         let temperature: String
         let feelTemperature: String
-        let dayOfWeek: String
+        let imageResolver: IImageResolver
         let eachHourForecast: [WeatherItemCell.WeatherItem]
     }
+    
+    private var imageResolver: IImageResolver?
     
     let buttomContainer = UIView()
     let lastWeatherIconViewGrey = UIImageView()
@@ -20,16 +23,33 @@ class WeatherCellGray: UIView {
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionLayout)
         
+        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.alwaysBounceHorizontal = true
         collectionView.register(WeatherItemCell.self, forCellWithReuseIdentifier: "weatherCell")
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInset = .init(top: .zero, left: 20, bottom: .zero, right: 20)
+        
         return collectionView
     }()
     
     var lineView = LineView()
+    
+    func setWeather(day: WeatherCellGrayViewModel) {
+        weatherItems = day.eachHourForecast
+
+        setDate(date: day.date)
+        setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
+        
+        imageResolver = day.imageResolver
+        imageResolver?.resolve(completion: { [weak self] image in
+            self?.lastWeatherIconViewGrey.image = image
+        })
+        
+        collectionView.reloadData()
+    }
     
     class LineView: UIView {
         override func draw(_ rect: CGRect) {
@@ -63,6 +83,7 @@ class WeatherCellGray: UIView {
         collectionLayout.scrollDirection = .horizontal
         collectionLayout.minimumInteritemSpacing = 8
         collectionLayout.minimumLineSpacing = 8
+//        collectionLayout.
         
         addSubview(buttomContainer)
         buttomContainer.isUserInteractionEnabled = true
@@ -92,12 +113,15 @@ class WeatherCellGray: UIView {
         
         buttomContainer.addSubview(lastWeatherIconViewGrey)
         lastWeatherIconViewGrey.translatesAutoresizingMaskIntoConstraints = false
-        
-        lastWeatherIconViewGrey.image = UIImage(named: "mini_sun_icon")
+        lastWeatherIconViewGrey.contentMode = .scaleToFill
         
         NSLayoutConstraint.activate([
             lastWeatherIconViewGrey.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
             lastWeatherIconViewGrey.rightAnchor.constraint(equalTo: lineView.rightAnchor),
+            lastWeatherIconViewGrey.widthAnchor.constraint(equalToConstant: 30),
+            lastWeatherIconViewGrey.heightAnchor.constraint(equalToConstant: 27)
+            
+            
         ])
         
         // text temperature
@@ -135,7 +159,7 @@ class WeatherCellGray: UIView {
         
         NSLayoutConstraint.activate([
             collectionView.bottomAnchor.constraint(equalTo: buttomContainer.bottomAnchor, constant: -16),
-            collectionView.leadingAnchor.constraint(equalTo: lineView.leadingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: buttomContainer.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: buttomContainer.trailingAnchor)
         ])
@@ -165,18 +189,9 @@ class WeatherCellGray: UIView {
         
     }
     
-    func setWeather(day: WeatherDay) {
-        weatherItems = day.eachHourForecast
-
-        setDate(date: day.date, dayOfTheWeek: day.dayOfWeek)
-        setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
-        
-        collectionView.reloadData()
-    }
-    
-    private func setDate(date: String, dayOfTheWeek: String) {
+    private func setDate(date: String) {
         let text = NSMutableAttributedString(
-            string: date + ", ",
+            string: date,
             attributes: [
                 .font: UIFont.systemFont(
                     ofSize: 16,
@@ -184,11 +199,13 @@ class WeatherCellGray: UIView {
                 )
             ])
         
-        let textForDayOfTheWeek = NSMutableAttributedString(
-            string: dayOfTheWeek,
-            attributes: [.foregroundColor: UIColor.gray])
+        guard text.length >= 2 else {
+            dateLabel.attributedText = text
+            return
+        }
         
-        text.append(textForDayOfTheWeek)
+        let range = NSRange(location: text.length - 2, length: 2)
+        text.addAttribute(.foregroundColor, value: UIColor.gray, range: range)
         
         dateLabel.attributedText = text
     }
@@ -204,7 +221,8 @@ extension WeatherCellGray: UICollectionViewDataSource {
         
         let weatherItem = weatherItems[indexPath.row]
         
-        cell.configure(with: weatherItem.time, temperature: weatherItem.temperature, emoji: weatherItem.emoji)
+        cell.configure(model: WeatherItemCell.WeatherItem(time: weatherItem.time, temperature: weatherItem.temperature, imageResolver: weatherItem.imageResolver)
+        )
         
         return cell
     }

@@ -1,90 +1,137 @@
-//
-//  ViewController.swift
-//  WeatherAPP
-//
-//  Created by Анастасия Неверова on 16.02.2024.
-//  Edite on 22.05.2024.
-//
+
+// TODO: 1. Разбить дни с интервалом в 3 часа
+// TODO: 2. Отобразить на экране
+// TODO: 3. картинку, день недели
 
 import UIKit
 
 class MainScreenViewController: UIViewController  {
-    let weatherCellGray = WeatherCellGray()
-    let weatherCellGray2 = WeatherCellGray()
-    let weatherCellGray3 = WeatherCellGray()
-    let weatherCellGray4 = WeatherCellGray()
-    let scrollView = UIScrollView()
-    let topContainer = UIImageView()
-    let currentDayLabel = UILabel()
-    let currentWeatherIconView = UIImageView()
-    let currentTemperatureLabel = UILabel()
-    let currentFeelTemperatureLabel = UILabel()
     
-    lazy var day1 = WeatherCellGray.WeatherDay(
-        date: "13 августа",
-        temperature: "25°",
-        feelTemperature: "29°",
-        dayOfWeek: "пн",
-        eachHourForecast: weatherItemsForMonday
-    )
-    
-    lazy var day2 = WeatherCellGray.WeatherDay(
-        date: "14 августа",
-        temperature: "25°",
-        feelTemperature: "26°",
-        dayOfWeek: "пн",
-        eachHourForecast: weatherItemsForMonday
-    )
-    
-    lazy var day3 = WeatherCellGray.WeatherDay(
-        date: "15 августа",
-        temperature: "23°",
-        feelTemperature: "20°",
-        dayOfWeek: "пн",
-        eachHourForecast: weatherItemsForMonday
-    )
-    
-    lazy var day4 = WeatherCellGray.WeatherDay(
-        date: "16 августа",
-        temperature: "25°",
-        feelTemperature: "20°",
-        dayOfWeek: "пн",
-        eachHourForecast: weatherItemsForMonday
-    )
-
-    let weatherItemsForMonday = [
-        WeatherItemCell.WeatherItem(time: "12:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "15:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "18:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "21:00", temperature: "21°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "01:00", temperature: "20°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "04:00", temperature: "18°", emoji: "mini_sun_icon")
-    ]
-    
-    let weatherItemsForSunday = [
-        WeatherItemCell.WeatherItem(time: "12:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "15:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "18:00", temperature: "25°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "21:00", temperature: "21°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "01:00", temperature: "20°", emoji: "mini_sun_icon"),
-        WeatherItemCell.WeatherItem(time: "04:00", temperature: "18°", emoji: "mini_sun_icon")
-    ]
+    let mainView = WeatherMainView()
+    let weatherItemsView = WeatherItemsView()
     
     let item = UIBarButtonItem(systemItem: .close)
 
-    // MARK: - ViewDidLoad
+    private var service = WeatherService()
     
+    // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        weatherCellGray.setWeather(day: day1)
-        weatherCellGray2.setWeather(day: day2)
-        weatherCellGray3.setWeather(day: day3)
-        weatherCellGray4.setWeather(day: day4)
         
-        topContainer.isUserInteractionEnabled = true
-
+        setInitialInfo()
+        makeWeatherRequest()
+    }
+    
+    @objc func buttonTappedAction() {
+        // TODO: Add some code
+    }
+    
+    private func makeWeatherRequest() {
+        service.fetchWeather(for: "Nizhniy Novgorod") { response in
+            DispatchQueue.main.async {
+                guard let response else { return }
+                
+                var result = self.splitIntoDays(forecasts: response.forecasts)
+                
+                self.weatherItemsView.saveArray(array: result)
+                self.navigationItem.title = response.city
+            }
+        }
+    }
+   
+    // MARK: GPT
+    
+    func convertToDays(forecasts: [Forecast]) -> [WeatherCellGray.WeatherCellGrayViewModel] {
+        let splitForecasts = splitIntoDays(forecasts: forecasts)
+        var weatherDays: [WeatherCellGray.WeatherCellGrayViewModel] = []
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        dateFormatter.dateFormat = "d MMMM"
+        
+        let dayOfWeekFormatter = DateFormatter()
+        dayOfWeekFormatter.locale = Locale(identifier: "ru_RU")
+        dayOfWeekFormatter.dateFormat = "EEEE"
+        
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale(identifier: "ru_RU")
+        timeFormatter.dateFormat = "HH:mm"
+        
+        for dailyForecasts in splitForecasts {
+            // Проверяем первый элемент для получения даты
+            guard let firstForecast = dailyForecasts.first else { continue }
+            
+            // Форматируем дату и день недели
+            let date = dateFormatter.string(from: firstForecast.date)
+            let dayOfWeek = dayOfWeekFormatter.string(from: firstForecast.date)
+            
+            // Вычисляем средние значения температуры и температуры по ощущениям
+            let avgTemperature = dailyForecasts.map { $0.temperature }.reduce(0, +) / Double(dailyForecasts.count)
+            let avgFeelsLikeTemperature = dailyForecasts.map { $0.feelsLike }.reduce(0, +) / Double(dailyForecasts.count)
+            
+            // Форматируем средние значения в строки
+            let temperatureString = String(format: "%.1f", avgTemperature)
+            let feelTemperatureString = String(format: "%.1f", avgFeelsLikeTemperature)
+            
+            // Создаем прогнозы для каждого временного интервала
+            let eachHourForecast = dailyForecasts.map { forecast in
+                WeatherItemCell.WeatherItem(
+                    time: timeFormatter.string(from: forecast.date),
+                    temperature: String(format: "%.1f", forecast.temperature),
+                    imageResolver: ImageResolver(imageName: forecast.icon)
+                )
+            }
+            
+            // Создаем WeatherDay и добавляем его в массив
+            let weatherDay = WeatherCellGray.WeatherCellGrayViewModel(
+                date: date,
+                temperature: temperatureString,
+                feelTemperature: feelTemperatureString, 
+                imageResolver: ImageResolver(imageName: firstForecast.icon),
+                eachHourForecast: eachHourForecast
+            )
+            
+            weatherDays.append(weatherDay)
+        }
+        
+        return weatherDays
+    }
+    
+    
+    private func splitIntoDays(forecasts: [Forecast]) -> [[Forecast]] {
+        var previousDate: Date?
+        
+        var result: [[Forecast]] = []
+        var currentDay: [Forecast] = []
+        let calendar = Calendar.current
+        
+        for forecast in forecasts {
+            if let previousDate = previousDate {
+                let isSameDay = calendar.isDate(forecast.date, inSameDayAs: previousDate)
+                if isSameDay {
+                    currentDay.append(forecast)
+                } else {
+                    result.append(currentDay)
+                    currentDay = [forecast]
+                }
+            } else {
+                currentDay.append(forecast)
+            }
+            
+            previousDate = forecast.date
+        }
+        // добавляем последний массив, если он не пуст
+        if !currentDay.isEmpty {
+            result.append(currentDay)
+        }
+        
+        return result
+    }
+    
+    // MARK: GPT end
+    
+    func setInitialInfo() {
         // navigation Item title (Нижний Новгород)
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(buttonTappedAction))
@@ -118,151 +165,101 @@ class MainScreenViewController: UIViewController  {
             action: #selector(buttonTappedAction)
         )
         
-        navigationItem.title = "Нижний Новгород"
+       // navigationItem.title = "Нижний Новгород"
         
         view.backgroundColor = .systemBackground
         
-        layoutCurrentWeatherView()
+        setFeelsLikeTemperature(description: "Ясно", temp: "35")
+        
+        view.addSubview(weatherItemsView)
+        weatherItemsView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            weatherItemsView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            weatherItemsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            weatherItemsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            weatherItemsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
-    @objc func buttonTappedAction() {
-        // TODO: - Add code later
+    private func setToday(number: String, month: String, dayWeek: String) {
+        let todayText = "Сегодня"
+        let text = NSMutableAttributedString(
+            string: todayText + ", ",
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .semibold),
+                .foregroundColor: UIColor.white
+            ])
+        
+        let numberText = NSMutableAttributedString(
+            string: number + " ",
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .semibold),
+                .foregroundColor: UIColor.white
+            ])
+        
+        let monthText = NSMutableAttributedString(
+            string: month + ", ",
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .semibold),
+                .foregroundColor: UIColor.white
+            ])
+        
+        let dayWeekText = NSMutableAttributedString(
+            string: dayWeek,
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .semibold),
+                .foregroundColor: UIColor.white
+            ])
+        text.append(numberText)
+        text.append(monthText)
+        text.append(dayWeekText)
     }
     
-    func layoutCurrentWeatherView() {
+    private func setFeelsLikeTemperature(description: String, temp: String) {
+        let feels = "ощущается как"
         
-        view.addSubview(scrollView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.alwaysBounceVertical = true 
-        scrollView.alwaysBounceHorizontal = false
-        scrollView.showsHorizontalScrollIndicator = false
+        let text = NSMutableAttributedString(
+            string: description + ", ",
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .bold),
+                .foregroundColor: UIColor.white
+            ])
         
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        let feelLike = NSMutableAttributedString(
+            string: feels + " ",
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .bold),
+                .foregroundColor: UIColor.white
+            ])
         
-        // background image
         
-        scrollView.addSubview(topContainer)
-        topContainer.translatesAutoresizingMaskIntoConstraints = false
+        let temperatureFeelsLike = NSMutableAttributedString(
+            string: temp + "°",
+            attributes: [
+                .font:UIFont.systemFont(
+                    ofSize: 14,
+                    weight: .bold),
+                .foregroundColor: UIColor.white
+            ])
         
-        topContainer.image = UIImage(named: "Group 33510")
-        topContainer.contentMode = .scaleAspectFill
+        text.append(feelLike)
+        text.append(temperatureFeelsLike)
         
-        NSLayoutConstraint.activate([
-            topContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            topContainer.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 10),
-            topContainer.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            topContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            topContainer.heightAnchor.constraint(equalToConstant: 280)
-        ])
-        
-        // text
-        
-        topContainer.addSubview(currentDayLabel)
-        
-        currentDayLabel.translatesAutoresizingMaskIntoConstraints = false
-        currentDayLabel.text = "Сегодня, 12 августа, чт"
-        currentDayLabel.font = .systemFont(ofSize: 14, weight: .semibold)
-        currentDayLabel.textColor = .white
-        currentDayLabel.textAlignment = .center
-        
-        NSLayoutConstraint.activate([
-            currentDayLabel.topAnchor.constraint(equalTo: topContainer.topAnchor, constant: 16),
-            currentDayLabel.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            currentDayLabel.leadingAnchor.constraint(greaterThanOrEqualTo: topContainer.leadingAnchor, constant: 50),
-            currentDayLabel.trailingAnchor.constraint(greaterThanOrEqualTo: topContainer.trailingAnchor, constant: -50),
-        ])
-        
-        // image
-        
-        topContainer.addSubview(currentWeatherIconView)
-        currentWeatherIconView.translatesAutoresizingMaskIntoConstraints = false
-        
-        currentWeatherIconView.image = UIImage(named: "Sun")
-        
-        NSLayoutConstraint.activate([
-            currentWeatherIconView.topAnchor.constraint(equalTo: currentDayLabel.bottomAnchor, constant: 12),
-            currentWeatherIconView.centerXAnchor.constraint(equalTo: currentDayLabel.centerXAnchor)
-        ])
-        
-        // temperature label
-        
-        topContainer.addSubview(currentTemperatureLabel)
-        currentTemperatureLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        currentTemperatureLabel.text = "30°"
-        currentTemperatureLabel.font = .systemFont(ofSize: 48, weight: .bold)
-        currentTemperatureLabel.textColor = .white
-        
-        NSLayoutConstraint.activate([
-            currentTemperatureLabel.topAnchor.constraint(equalTo: currentWeatherIconView.bottomAnchor, constant: 10),
-            currentTemperatureLabel.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor)
-        ])
-        
-        // feel temperature label
-        
-        topContainer.addSubview(currentFeelTemperatureLabel)
-        currentFeelTemperatureLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        currentFeelTemperatureLabel.text = "Ясно, ощущается как 32°"
-        currentFeelTemperatureLabel.font = .systemFont(ofSize: 14, weight: .semibold)
-        currentFeelTemperatureLabel.textColor = .white
-        
-        NSLayoutConstraint.activate([
-            currentFeelTemperatureLabel.topAnchor.constraint(equalTo: currentTemperatureLabel.bottomAnchor, constant: 2),
-            currentFeelTemperatureLabel.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor)
-        ])
-        
-        // background image grey
-        
-        scrollView.addSubview(weatherCellGray)
-        weatherCellGray.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray.topAnchor.constraint(equalTo: topContainer.bottomAnchor, constant: 20),
-            weatherCellGray.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray.heightAnchor.constraint(equalToConstant: 206)
-        ])
-        
-        scrollView.addSubview(weatherCellGray2)
-        weatherCellGray2.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray2.topAnchor.constraint(equalTo: weatherCellGray.bottomAnchor, constant: 8),
-            weatherCellGray2.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray2.heightAnchor.constraint(equalToConstant: 206)
-        ])
-        
-        scrollView.addSubview(weatherCellGray3)
-        weatherCellGray3.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray3.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray3.topAnchor.constraint(equalTo: weatherCellGray2.bottomAnchor, constant: 8),
-            weatherCellGray3.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray3.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray3.heightAnchor.constraint(equalToConstant: 206)
-        ])
-        
-        scrollView.addSubview(weatherCellGray4)
-        weatherCellGray4.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            weatherCellGray4.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-            weatherCellGray4.topAnchor.constraint(equalTo: weatherCellGray3.bottomAnchor, constant: 8),
-            weatherCellGray4.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor),
-            weatherCellGray4.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            weatherCellGray4.heightAnchor.constraint(equalToConstant: 206),
-            weatherCellGray4.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10)
-        ])
+        // 2
+        mainView.currentFeelTemperatureLabel.attributedText = text
     }
 }
 
