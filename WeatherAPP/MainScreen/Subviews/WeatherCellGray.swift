@@ -113,12 +113,15 @@ class WeatherCellGray: UICollectionViewCell {
         
         buttomContainer.addSubview(lastWeatherIconViewGrey)
         lastWeatherIconViewGrey.translatesAutoresizingMaskIntoConstraints = false
-        
-        lastWeatherIconViewGrey.image = UIImage(named: "mini_sun_icon")
+        lastWeatherIconViewGrey.contentMode = .scaleToFill
         
         NSLayoutConstraint.activate([
             lastWeatherIconViewGrey.topAnchor.constraint(equalTo: buttomContainer.topAnchor, constant: 18),
             lastWeatherIconViewGrey.rightAnchor.constraint(equalTo: lineView.rightAnchor),
+            lastWeatherIconViewGrey.widthAnchor.constraint(equalToConstant: 30),
+            lastWeatherIconViewGrey.heightAnchor.constraint(equalToConstant: 27)
+            
+            
         ])
         
         // text temperature
