@@ -39,18 +39,13 @@ class WheatherCellBlue: UICollectionViewCell {
         topContainer.image = UIImage(named: "Group 33510")
         topContainer.clipsToBounds = true
         
-//        currentDayLabel.text = "Сегодня, 12 августа, чт"
         currentDayLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         currentDayLabel.textColor = .white
         currentDayLabel.textAlignment = .center
         
- //       currentWeatherIconView.image = UIImage(named: "Sun")
-        
-//        currentTemperatureLabel.text = "30°"
         currentTemperatureLabel.font = .systemFont(ofSize: 48, weight: .bold)
         currentTemperatureLabel.textColor = .white
         
-//        currentFeelTemperatureLabel.text = "Ясно, ощущается как 32°"
         currentFeelTemperatureLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         currentFeelTemperatureLabel.textColor = .white
     }
