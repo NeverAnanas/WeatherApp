@@ -83,7 +83,8 @@ extension WeatherItemsView: UICollectionViewDataSource {
             let model = WheatherCellBlue.WheatherCellBlueViewModel(
                 currentDay: convertedDate,
                 currentTemperature: convertedTemperature,
-                currentFeelTemperature: convertedFeelsTemperature
+                currentFeelTemperature: convertedFeelsTemperature, 
+                imageResolver: ImageResolver(imageName: forecastDay.icon)
             )
             
             cell.configure(model: model)

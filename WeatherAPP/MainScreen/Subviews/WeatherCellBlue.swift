@@ -20,12 +20,16 @@ class WheatherCellBlue: UICollectionViewCell {
         let currentDay: String
         let currentTemperature: String
         let currentFeelTemperature: String
+        let imageResolver: ImageResolver
     }
     
     func configure(model: WheatherCellBlueViewModel) {
         currentDayLabel.text = model.currentDay
         currentTemperatureLabel.text = model.currentTemperature
         currentFeelTemperatureLabel.text = model.currentFeelTemperature
+        model.imageResolver.resolve { image in
+            self.currentWeatherIconView.image = image?.resizeImage(targetSize: CGSize.init(width: 150, height: 150))
+        }
         
     }
     
@@ -40,7 +44,7 @@ class WheatherCellBlue: UICollectionViewCell {
         currentDayLabel.textColor = .white
         currentDayLabel.textAlignment = .center
         
-        currentWeatherIconView.image = UIImage(named: "Sun")
+ //       currentWeatherIconView.image = UIImage(named: "Sun")
         
 //        currentTemperatureLabel.text = "30°"
         currentTemperatureLabel.font = .systemFont(ofSize: 48, weight: .bold)
@@ -81,7 +85,7 @@ class WheatherCellBlue: UICollectionViewCell {
         currentWeatherIconView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            currentWeatherIconView.topAnchor.constraint(equalTo: currentDayLabel.bottomAnchor, constant: 12),
+            currentWeatherIconView.topAnchor.constraint(equalTo: currentDayLabel.bottomAnchor),
             currentWeatherIconView.centerXAnchor.constraint(equalTo: currentDayLabel.centerXAnchor)
         ])
         
@@ -91,7 +95,7 @@ class WheatherCellBlue: UICollectionViewCell {
         currentTemperatureLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            currentTemperatureLabel.topAnchor.constraint(equalTo: currentWeatherIconView.bottomAnchor, constant: 10),
+            currentTemperatureLabel.topAnchor.constraint(equalTo: currentWeatherIconView.bottomAnchor, constant: -10),
             currentTemperatureLabel.centerXAnchor.constraint(equalTo: topContainer.centerXAnchor)
         ])
         
