@@ -24,7 +24,7 @@ class MainScreenViewController: UIViewController  {
     }
     
     @objc func buttonTappedAction() {
-        // TODO: Add some code
+        navigationController?.pushViewController(SearchViewController(), animated: true)
     }
     
     private func makeWeatherRequest() {
