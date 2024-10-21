@@ -5,7 +5,7 @@ class WeatherItemCell: UICollectionViewCell {
     struct WeatherItem {
         let time: String
         let temperature: String
-        let emoji: String
+        let imageResolver: ImageResolver
     }
     
     private let timeLabel = UILabel()
@@ -28,6 +28,7 @@ class WeatherItemCell: UICollectionViewCell {
         
         addSubview(emojiImageView)
         emojiImageView.translatesAutoresizingMaskIntoConstraints = false
+        emojiImageView.contentMode = .scaleAspectFill
         
         
         NSLayoutConstraint.activate([
@@ -35,6 +36,8 @@ class WeatherItemCell: UICollectionViewCell {
             timeLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             emojiImageView.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 5),
             emojiImageView.centerXAnchor.constraint(equalTo: timeLabel.centerXAnchor),
+            emojiImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            emojiImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
             temperatureLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
             temperatureLabel.topAnchor.constraint(equalTo: emojiImageView.bottomAnchor, constant: 10),
             temperatureLabel.centerXAnchor.constraint(equalTo: emojiImageView.centerXAnchor)
@@ -43,10 +46,12 @@ class WeatherItemCell: UICollectionViewCell {
         layer.cornerRadius = 16
     }
     
-    func configure(with time: String, temperature: String, emoji: String) {
-        timeLabel.text = time
-        temperatureLabel.text = temperature
-        emojiImageView.image = UIImage(named: emoji)
+    func configure(model: WeatherItem) {
+        timeLabel.text = model.time
+        temperatureLabel.text = model.temperature
+        model.imageResolver.resolve { image in
+            self.emojiImageView.image = image
+        }
         
     }
 }
