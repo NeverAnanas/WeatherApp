@@ -19,7 +19,8 @@ class SearchViewController: UIViewController, UICollectionViewDataSource, UIColl
         collectionView.alwaysBounceVertical = true
         collectionView.register(SearchItemCell.self, forCellWithReuseIdentifier: SearchItemCell.id)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.contentInset = .init(top: .zero, left: 20, bottom: .zero, right: 20)
+        collectionView.contentInset = .init(top: .zero, left: 20, bottom: 80, right: 20)
+
         
         return collectionView
     }()
@@ -31,6 +32,8 @@ class SearchViewController: UIViewController, UICollectionViewDataSource, UIColl
     let addCityButton = BlueFilledButton(title: "Добавить город")
     let locationButton = LocationButton()
     var backImage = UIImage(named: "back_icon")?.withRenderingMode(.alwaysOriginal)
+    let maskedView = UIView(frame: CGRect(x: 50, y: 50, width: 256, height: 256))
+    let gradientMaskLayer = CAGradientLayer()
     
     lazy var sunButton = ImageNavigationBarButton(image: .sun) { [weak self] in
         self?.changeTheme()
@@ -53,9 +56,26 @@ class SearchViewController: UIViewController, UICollectionViewDataSource, UIColl
         print()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        view.layer.addSublayer(gradientMaskLayer)
+        gradientMaskLayer.frame = view.bounds
+        gradientMaskLayer.colors = [UIColor(white: 1, alpha: 0).cgColor, UIColor.white.cgColor]
+        gradientMaskLayer.locations = [0.7, 0.9]
+        
+        // Set the start and end points for the gradient layer
+        gradientMaskLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientMaskLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        
+        addCityButton.layer.zPosition = 10
+        locationButton.layer.zPosition = 11
+    }
+    
     override func viewDidLoad() {
         view.backgroundColor = .systemBackground
         setNavigatinItems()
+       
         
         // collection
         view.addSubview(collectionView)
@@ -87,7 +107,7 @@ class SearchViewController: UIViewController, UICollectionViewDataSource, UIColl
     // MARK: - UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return 15
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
