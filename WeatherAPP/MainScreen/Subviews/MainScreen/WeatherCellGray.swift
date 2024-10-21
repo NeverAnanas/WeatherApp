@@ -13,11 +13,13 @@ class WeatherCellGray: UICollectionViewCell {
     }
     
     private var imageResolver: IImageResolver?
+    private var converterTemperature = TemperatureConverter()
     
+    var lineView = LineView()
     let buttomContainer = UIView()
     let lastWeatherIconViewGrey = UIImageView()
-    let currentFeelTemperatureLabel = UILabel()
-    let currentTemperatureLabelBlack = UILabel()
+    var currentFeelTemperatureLabel = UILabel()
+    var currentTemperatureLabelBlack = UILabel()
     let dateLabel = UILabel()
     let collectionLayout = UICollectionViewFlowLayout()
     lazy var collectionView: UICollectionView = {
@@ -35,14 +37,11 @@ class WeatherCellGray: UICollectionViewCell {
         return collectionView
     }()
     
-    var lineView = LineView()
-    
     func setWeather(day: WeatherCellGrayViewModel) {
         weatherItems = day.eachHourForecast
-
         setDate(date: day.date)
-        setTemperature(temperature: day.temperature, feelTemperature: day.feelTemperature)
-        
+        currentTemperatureLabelBlack.attributedText = converterTemperature.fontDesignationTemperature(temperature: day.temperature)
+        currentFeelTemperatureLabel.attributedText = converterTemperature.fontDesignationFeelsTemperature(feelTemperature: day.feelTemperature)
         imageResolver = day.imageResolver
         imageResolver?.resolve(completion: { [weak self] image in
             self?.lastWeatherIconViewGrey.image = image
@@ -83,7 +82,6 @@ class WeatherCellGray: UICollectionViewCell {
         collectionLayout.scrollDirection = .horizontal
         collectionLayout.minimumInteritemSpacing = 8
         collectionLayout.minimumLineSpacing = 8
-//        collectionLayout.
         
         addSubview(buttomContainer)
         buttomContainer.isUserInteractionEnabled = true
@@ -120,8 +118,6 @@ class WeatherCellGray: UICollectionViewCell {
             lastWeatherIconViewGrey.rightAnchor.constraint(equalTo: lineView.rightAnchor),
             lastWeatherIconViewGrey.widthAnchor.constraint(equalToConstant: 30),
             lastWeatherIconViewGrey.heightAnchor.constraint(equalToConstant: 27)
-            
-            
         ])
         
         // text temperature
@@ -163,30 +159,6 @@ class WeatherCellGray: UICollectionViewCell {
             collectionView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: buttomContainer.trailingAnchor)
         ])
-    }
-    
-    private func setTemperature(temperature: String, feelTemperature: String) {
-        let nowTemperature = NSMutableAttributedString(
-            string: temperature,
-            attributes: [
-                .font: UIFont.systemFont(
-                    ofSize: 17,
-                    weight: .bold
-                )]
-            )
-        currentTemperatureLabelBlack.attributedText = nowTemperature
-        
-        let feelingTemperature = NSMutableAttributedString(
-            string: feelTemperature,
-            attributes: [
-                .font: UIFont.systemFont(
-                    ofSize: 17,
-                    weight: .bold),
-                    .foregroundColor: UIColor.gray
-                ]
-        )
-        currentFeelTemperatureLabel.attributedText = feelingTemperature
-        
     }
     
     private func setDate(date: String) {

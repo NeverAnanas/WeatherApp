@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 class TemperatureConverter {
     
@@ -9,10 +9,33 @@ class TemperatureConverter {
     }
     
     func convertTemperatureAndAddWeatherState(feelsLike: Double, weatherState: Forecast) -> String {
-        let convertTemp = convertTemperatureToString(temperature: feelsLike)
+        let convertTempToString = convertTemperatureToString(temperature: feelsLike)
         let weatherStateIndex = weatherState
-        let result = weatherStateIndex.main + ", " + "ощущается как " + convertTemp
+        let result = weatherStateIndex.main + ", " + "ощущается как " + convertTempToString
         
         return result
+    }
+    
+    func fontDesignationTemperature(temperature: String) -> NSAttributedString {
+        return NSMutableAttributedString(
+            string: temperature,
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .bold
+                )]
+            )
+    }
+    
+    func fontDesignationFeelsTemperature(feelTemperature: String) -> NSAttributedString {
+        return NSMutableAttributedString(
+            string: feelTemperature,
+            attributes: [
+                .font: UIFont.systemFont(
+                    ofSize: 17,
+                    weight: .bold),
+                .foregroundColor: UIColor.gray
+            ]
+        )
     }
 }
